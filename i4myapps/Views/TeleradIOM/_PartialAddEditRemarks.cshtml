@@ -1,0 +1,42 @@
+﻿@model i4myapps.Models.sp_StudyListVM
+
+<div>
+    <form id="myFormRemarks">
+
+        @Html.HiddenFor(m => m.pk)
+        @Html.TextBoxFor(model => model.pat_name, new { @class = "form-control", @placheholder = "Name" })
+
+        @Html.TextBoxFor(model => model.remarks, new { @class = "form-control", @placheholder = "Remarks" })
+
+        <a href="#" id="btnSubmitRemarks" class="btn btn-success">
+            @if (Model.remarks != null)
+        {<span>Update</span> }
+        else
+        {<span>Save</span>}
+    </a>
+
+
+</form>
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+
+        $("#btnSubmitRemarks").click(function () {
+            var myformdata = $("#myFormRemarks").serialize();
+            $.ajax({
+                type: "POST",
+                url: "/TeleradNIOM/AddEditRemarksSave",
+                data: myformdata,
+                cache: false,
+                success: function () {
+                    $("#Modal_Remarks").modal('hide');
+                    //window.location.href = "/TeleradNIOM/Index";
+                }
+            })
+        })
+
+    })
+</script>

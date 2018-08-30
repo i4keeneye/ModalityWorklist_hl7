@@ -1,0 +1,435 @@
+﻿@model IEnumerable<i4myapps.Models.tbl_mwlsVM>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+
+
+<div class="jumbotron" style="margin:3px; padding:3px; margin-top:5px;">
+    <div class="d-flex">
+        <div class="mr-auto p-2">
+            @using (Html.BeginForm("Index", "Dcmtk_mwls", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <form>
+                    <div class="form-group">
+                        @*<label for="exampleInputFile">File input</label>*@
+                        <input type="file" name="file" class="form-control-file" id="exampleInputFile" aria-describedby="fileHelp" required />
+                        <small id="fileHelp" class="form-text text-muted">Please select excel file for the Modality Worklist</small>
+
+                        @*<input id="FilesInput" name="file" type="file" class="file-loading" required />*@
+
+                        <button id="btnSubmit" type="submit" class="btn btn-outline-info btn-sm btn-xs">
+                            <span class="fa fa-file-excel-o"></span> Import
+                        </button>
+                    </div>
+                </form>
+            }
+        </div>
+        <div class="p-2">
+            @*<a href="#" class="btn btn-outline-info btn-sm my-sm-0" onclick="PopupForm(0)">Add New</a>*@
+            <button id="btnRunmwl" type="button" class="btn btn-outline-info btn-sm my-sm-0">
+                <span class="fa fa-thumbs-up"></span> Run MWL
+            </button>
+        </div>
+        <div class="p-2">
+            <button id="btnClearAll" type="button" onclick=pop2() class="btn btn-outline-danger btn-sm my-2 my-sm-0">
+                <span class="fa fa-trash-o"></span> Clear MWL
+            </button>
+        </div>
+    </div>
+</div>
+@*myModal start*@
+<div class="modal fade" id="myModal_new">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Update Record</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="ModalBody_mwl">
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+@*myModal End*@
+
+
+@*myModal DeleteRecord Start*@
+<input type="hidden" id="stdiuidhidden" />
+
+<div class="modal fade" id="myModal_ConfirmDelete" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Delete Record</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="myModalBody_ConfirmDelete">
+                <h3>Are you sure you want to delete this record?</h3>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-default" data-dismiss="modal"><span class="fa fa-remove"></span> No</a>
+                <a href="#" class="btn btn-success" onclick="DeleteStdRec()"><span class="fa fa-thumbs-up"></span> Yes</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*myModal DeleteRecord End*@
+
+
+@*myModal ClearRecord Start*@
+
+<div class="modal fade" id="myModal_ConfirmClear" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Clear MWL List</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="myModalBody_ConfirmDelete">
+                <h5>Are you sure you want to clear the worklist?</h5>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-default" data-dismiss="modal"><span class="fa fa-remove"></span> No</a>
+                <a href="#" class="btn btn-success" onclick="ClreatAllHl7Record()"><span class="fa fa-thumbs-up"></span> Yes</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*myModal Clear Record End*@
+
+<table id="myTable" class="table table-striped dt-responsive nowrap" style="width:100%">
+    <thead style="background-color:cornflowerblue; height:15px; color:aliceblue;">
+        <tr>
+
+            <th>ACC. No.</th>
+            <th>Name</th>
+            <th>ID</th>
+            <th>Sex</th>
+            <th>DOB</th>
+            <th>Program</th>
+            <th>Description</th>
+            <th>SchedDate</th>
+            <th>Status</th>
+            <th></th>
+
+        </tr>
+    </thead>
+
+</table>
+
+
+
+
+
+@*Buttons*@
+<link href="~/Content/DataTables/css/dataTables.jqueryui.css" rel="stylesheet" />
+
+<link href="~/Content/DataTables/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+<link href="~/Content/DataTables/css/responsive.bootstrap4.min.css" rel="stylesheet" />
+@*<link href="~/Content/DataTables/css/buttons.bootstrap4.css" rel="stylesheet" />*@
+<link href="~/Content/DataTables/css/buttons.jqueryui.css" rel="stylesheet" />
+
+@section scripts{
+
+
+    @*Buttons*@
+    <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/DataTables/dataTables.bootstrap4.min.js"></script>
+    <script src="~/Scripts/DataTables/dataTables.responsive.min.js"></script>
+    <script src="~/Scripts/DataTables/responsive.bootstrap.min.js"></script>
+
+    <script src="~/Scripts/DataTables/dataTables.buttons.min.js"></script>
+    <script src="~/Scripts/DataTables/buttons.bootstrap4.min.js"></script>
+    <script src="~/Scripts/jszip.min.js"></script>
+    <script src="~/Scripts/pdfmake/pdfmake.min.js"></script>
+    <script src="~/Scripts/pdfmake/vfs_fonts.js"></script>
+    <script src="~/Scripts/DataTables/buttons.html5.js"></script>
+    <script src="~/Scripts/DataTables/buttons.print.min.js"></script>
+    <script src="~/Scripts/DataTables/buttons.colVis.min.js"></script>
+    <script src="~/Scripts/notify.min.js"></script>
+
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+
+
+
+
+        var Popup, wldataTable;
+
+            wldataTable = $('#myTable').DataTable({
+                "dom": 'Bfrtip',
+                "iDisplayLength": 30,
+                "ajax": {
+
+                    url: "/Dcmtk_mwls/GetData",
+                    type: "GET",
+                    datatype: "json"
+                },
+
+                "buttons": [
+                    { extend: 'copy', text: 'Copy', className: 'btn btn-info btn-sm', exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6] }, header: false },
+                    { extend: 'pdf', text: 'Pdf', className: 'btn btn-info btn-sm', exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6] } },
+                    { extend: 'excel', text: 'Excel', className: 'btn btn-info btn-sm', exportOptions: { columns: [0, 1, 2, 3, 4, 5, 6] } },
+                    { extend: 'colvis', text: 'Colvis', className: 'btn btn-info btn-sm'}],
+            columns: [
+                { "data": "acc_no", "visible": false},
+                {
+                    "data": "pat_name"},
+                { "data": 'pat_id'},
+                { "data": 'pat_sex' },
+                { "data": 'pat_dob'},
+                { "data": "referring_physician" },
+                { "data": "sr_description", "visible": false },
+                { "data": "scheddate","visible":false},
+                { "data": "status" },
+                {
+                    "data": "pk", "render": function (data) {
+
+                        //return "<a style='padding: 1px' class='btn btn-warning btn-xs' onclick=PopupForm('" + data + "')><i class='fa fa-pencil'> </i ></a >" +
+                        return "<a href='#' style='font-size: 1rem; color:darkred;'  onclick=ConfirmDelete(" + data + ") > <i class='fa fa-trash'></i></a>" +
+                               "<a href='#' style='font-size: 1rem; color:forestgreen;' onclick=mwlstatus(" + data + ") > <i class='fa fa-check-circle-o'></i></a>"
+
+                    },
+
+                    "orderable": false,
+                    "searchable": false,
+                    "width": "40px"
+                }
+
+            ]
+        });
+
+        var PopupForm = function (data) {
+            var url = "/Dcmtk_mwls/AddEdit/" + data;
+            $("#ModalBody_mwl").load(url, function () {
+                $("#myModal_new").modal('show');
+            })
+        }
+
+
+        var pop2= function (data) {
+            var url = "/Dcmtk_mwls/AddEdit/" + data;
+        
+                $("#myModal_ConfirmClear").modal('show');
+            
+        }
+
+        function SubmitForm(form) {
+            $.validator.unobtrusive.parse(form);
+            if ($(form).valid()) {
+                $.ajax({
+                    type: "POST",
+                    url: form.action,
+                    data: $(form).serialize(),
+                    success: function (data) {
+                        if (data.success) {
+                            $("#myModal_new").modal('hide')
+                            wldataTable.ajax.reload();
+
+                            $.notify(data.message, {
+                                globalPosition: "top center",
+                                className: "success"
+                            })
+
+                        }
+                    }
+                });
+            }
+            return false;
+        }
+
+
+        //Start Delete Record and Popup Modal
+        function ConfirmDelete(pk) {
+            $("#stdiuidhidden").val(pk);
+            $("#myModal_ConfirmDelete").modal('show');
+        }
+
+            var table = $('#myTable').DataTable();
+
+        $('#MwlTable tbody').on('click', 'tr', function () {
+            $(this).addClass('selected');
+
+        });
+
+        var DeleteStdRec = function () {
+            table.row('.selected').remove().draw(false);
+
+            var stdId = $("#stdiuidhidden").val();
+
+            $.ajax({
+                url: '@Url.Action("DeleteHL7Record", "Dcmtk_mwls")',
+                type: 'POST',
+                data: { id: stdId },
+                success: function (data) {
+
+                    $("#myModal_ConfirmDelete").modal('hide')
+                    wldataTable.ajax.reload();
+                    $.notify(data.message, {
+                        globalPosition: "top center",
+                        className: "warn"
+                    })
+
+                }
+            });
+
+        }
+
+    //Start Delete Record and Popup Modal
+
+
+
+
+
+        @*function Delete(id) {
+            if (confirm('Are you sure to Delete this Recored?')) {
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: '@Url.Action("Delete", "Dcmtk_mwls")/' + id,
+                    success: function (data) {
+                        if (data.success) {
+
+                            wldataTable.ajax.reload();
+                            $.notify(data.message, {
+                                globalPosition: "top center",
+                                className: "warn"
+                            })
+                        }
+                    }
+                });
+            }
+        }*@
+//Start Change Status Status to Completed
+        function mwlstatus(id)
+        {
+                $.ajax(
+                    {
+                    type: "POST",
+                        @*url: '@Url.Action("Updatemwlstatus", "Dcmtk_mwls")/' + id,*@
+                        url: "/Dcmtk_mwls/UpdateSPSStatus",
+                        data: { id: id },
+                    success: function (data) {
+                        if (data.success) {
+                            wldataTable.ajax.reload();
+                            $.notify(data.message, {
+                                globalPosition: "top center",
+                                className: "success"
+                            })
+                        }
+                    }
+                });
+
+        }
+//Start Change Status Status to Completed
+
+        function ClreatAllHl7Record() {
+            $.ajax({
+                url: "/Dcmtk_mwls/ClearHL7AllRec",
+                type: "GET",
+                cache: false,
+                error: function (response) {
+                    $.notify(response.message, {
+
+                        globalPosition: "top center",
+                        className: "warn"
+
+                    })
+                },
+                success: function (response) {
+                    wldataTable.ajax.reload();
+                    $.notify(response.message, {
+
+                        globalPosition: "top center",
+                        className: response.className
+
+                    })
+                    $("#btnClearAll").attr("disabled", true);
+                    $("#myModal_ConfirmClear").modal('hide');
+
+                }
+            })
+
+        }
+
+
+// Start Clear all Modality worklist
+                        $("#btnClearAll2").click(function () {
+                            $.ajax({
+                                url: "/Dcmtk_mwls/ClearHL7AllRec",
+                                type: "GET",
+                                cache: false,
+                                error: function (response) {
+                                    $.notify(response.message, {
+
+                                        globalPosition: "top center",
+                                        className: "warn"
+
+                                    })
+                                },
+                                success: function (response) {
+                                    wldataTable.ajax.reload();
+                                    $.notify(response.message, {
+
+                                        globalPosition: "top center",
+                                        className:response.className
+
+                                    })
+                                    $("#btnClearAll").attr("disabled", true);
+
+                                }
+                            })
+                        }
+                        )
+
+// Start Clear all Modality worklist
+
+           //Start runmwl
+    $("#btnRunmwl").click(function () {
+        $.ajax({
+            url: "/Dcmtk_mwls/RunHL7Sender",
+            //url: "/Dcmtk_mwls/Runmwl",
+            type: "GET",
+            cache: false,
+            error: function (response) {
+                $.notify(response.message, {
+                    globalPosition: "top center",
+                    className: "warn"
+                })
+            },
+            success: function (response) {
+
+                $.notify(response.message, {
+                    globalPosition: "top center",
+                    className: response.className
+                })
+
+
+            }
+        })
+    }
+    )
+    //End runmwl
+
+
+
+
+    </script>
+}
+
+

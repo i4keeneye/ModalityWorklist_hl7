@@ -1,0 +1,86 @@
+﻿@model i4myapps.Models.tbl_mwlsVM
+@{
+    Layout = null;
+}
+
+@using (Html.BeginForm("AddEdit", "dcmtk_mwls", FormMethod.Post, new { onsubmit = "return SubmitForm(this)" }))
+{
+    @Html.HiddenFor(model => model.pk)
+    <div class="form-horizontal" role="form">
+
+        <div class="form-group" style="margin:2px; padding:2px;">
+            <label for="Location" class="col-md-3 control-label">Accession No.:</label>
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.acc_no, new { htmlAttributes = new { @class = "form-control", @placeholder = "Accession No." } })
+                @Html.ValidationMessageFor(model => model.acc_no, "", new { @class = "error" })
+            </div>
+        </div>
+
+        <div class="form-group" style="margin:2px; padding:2px;">
+            <label for="Country" class="col-md-3 control-label">Patient ID:</label>
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.pat_id, new { htmlAttributes = new { @class = "form-control", @placeholder = "Patient ID" } })
+                @Html.ValidationMessageFor(model => model.pat_id, "")
+            </div>
+        </div>
+
+        <div class="form-group" style="margin:2px; padding:2px;">
+            <label for="hostname" class="col-md-3 control-label">Patient Name:</label>
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.pat_name, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group" style="margin:2px; padding:2px;">
+            <label for="AET" class="col-md-3 control-label">Patient Sex:</label>
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.pat_sex, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group" style="margin:2px; padding:2px;">
+            <label for="port" class="col-md-3 control-label">Patient DOB:</label>
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.pat_dob, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group" style="margin:2px; padding:2px;">
+            <label for="active" class="col-md-3 control-label">Ref. Physician:</label>
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.referring_physician, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+        <div class="form-group" style="margin:2px; padding:2px;">
+            <label for="active" class="col-md-3 control-label">Description</label>
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.sr_description, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+        <div class="form-group" style="margin:2px; padding:2px;">
+            <label for="active" class="col-md-3 control-label">Status:</label>
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.status, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+            </div>
+        </div>
+
+
+
+
+        <div class="form-group" style="margin:2px; padding:2px;">
+            <div class="col-md-3 col-md-offset-3">
+                <input type="submit" value="Submit" class="btn btn-primary" />
+            </div>
+            <div class="col-md-6">
+                <input type="reset" value="Reset" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+
+    .error {
+        color: red;
+    }
+</style>

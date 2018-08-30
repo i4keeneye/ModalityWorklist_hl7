@@ -1,0 +1,83 @@
+﻿@model i4myapps.Models.tbl_pacslistVM
+@{
+    Layout = null;
+}
+
+@using (Html.BeginForm("AddEdit", "PACSList", FormMethod.Post, new { onsubmit = "return SubmitForm(this)" }))
+{
+    @Html.HiddenFor(model => model.pk)
+    <div class="form-horizontal" role="form">
+
+        <div class="form-group" style="margin:2px; padding:2px;">
+            <label for="Location" class="col-md-3 control-label">Location:</label>
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.location, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter Location" } })
+                @Html.ValidationMessageFor(model => model.location)
+            </div>
+        </div>
+
+        <div class="form-group" style="margin:2px; padding:2px;">
+            <label for="Country" class="col-md-3 control-label">Country:</label>
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.country, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter Country" } })
+                @Html.ValidationMessageFor(model => model.country)
+            </div>
+        </div>
+
+        <div class="form-group" style="margin:2px; padding:2px;">
+            <label for="hostname" class="col-md-3 control-label">Host Name:</label>
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.hostname, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group" style="margin:2px; padding:2px;">
+            <label for="AET" class="col-md-3 control-label">AET:</label>
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.AET, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group" style="margin:2px; padding:2px;">
+            <label for="port" class="col-md-3 control-label">Port:</label>
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.port, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+
+        <div class="form-group" style="margin:2px; padding:2px;">
+            <label for="description" class="col-md-3 control-label">Description:</label>
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.description, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+
+        <div class="form-group" style="margin:2px; padding:2px;">
+            <label for="active" class="col-md-3 control-label">Active:</label>
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.active, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group" style="margin:2px; padding:2px;">
+
+            <label for="service" class="col-md-3 control-label">Service:</label>
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.service, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+
+
+        <div class="form-group" style="margin:2px; padding:2px;">
+            <div class="col-md-3 col-md-offset-3">
+                <input type="submit" value="Submit" class="btn btn-primary" />
+            </div>
+            <div class="col-md-6">
+                <input type="reset" value="Reset" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}

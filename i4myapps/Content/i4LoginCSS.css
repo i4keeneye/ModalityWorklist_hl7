@@ -1,0 +1,46 @@
+﻿body {
+    margin:0;
+    padding:0;
+    background: url("../../skyline.jpg");
+    background-size:cover;
+    background-repeat: no-repeat;
+    background-attachment:fixed;
+    font-family:sans-serif;
+}
+.panel{
+    border:0px;
+    background:rgba(0,0,0,0.5);
+    color:white;
+    text-align:center;
+    padding-top:70px;
+    position:relative;
+
+
+}
+.panel:hover{
+    background:rgba(0,0,0,0.7);
+}
+h4{
+    margin:0;
+    padding:0;
+    color: #f6cd07;
+}
+.lock {
+    position: absolute;
+    top: -50px;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    font-size:60px;
+    left:37%;
+    text-align: center;
+    background: linear-gradient(DarkSlateGray,Cyan);
+    background: -webkit-linear-gradient(DarkSlateGray,Cyan);
+    background: -moz-linear-gradient(DarkSlateGray,Cyan);
+    border:3px outset #ebb10f;
+    -webkit-border-radius:100%;
+    -moz-border-radius:100%;
+    border-radius:100%;
+
+
+}

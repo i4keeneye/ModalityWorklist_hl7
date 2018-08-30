@@ -1,0 +1,39 @@
+﻿@*@using (Html.BeginForm("Index", "TeleradNIOM", FormMethod.Post))
+    {*@
+
+
+<div class="jumbotron" style="margin:5px; padding:5px">
+    <div class="row">
+        <div class="container">
+            <ul class="nav navbar-nav col-sm-12 col-md-12 col-lg-12">
+                <li> @Html.DropDownList("Location", (IEnumerable<SelectListItem>)ViewBag.Location, new { @class = "form-control" })</li>
+
+                <li> @Html.TextBox("stddate", null, new { @class = "form-control" })</li>
+                <li>
+                    @*<input type="submit" class="btn btn-info" value="Search" />*@
+
+
+                    <button id="btnSubmit" type="submit" class="btn btn-info">
+                        <span class="glyphicon glyphicon-search"></span> Search
+                    </button>
+                </li>
+                <li>
+                    <button id="btnDelete" type="button" class="btn btn-danger">
+                        <span class="glyphicon glyphicon-trash"></span> Delete
+                    </button>
+                </li>
+                <li>
+                    <button id="btnCompress" type="button" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-resize-small"></span> Compress
+                    </button>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+@*}*@
+
+
+

@@ -1,0 +1,93 @@
+Introduction
+
+In this post, I’m going to demonstrate how to change the ASP.NET identity security setup that comes with default MVC template to use the simple username instead of email.
+Changing the LoginViewModel
+
+Here, you need to change the Email property to UserName and also delete the [EmailAddress] attribute, otherwise our view is expecting an email rather than a Username, in the end, we should have something like this:
+Hide   Copy Code
+
+public class LoginViewModel
+{
+    [Required]
+    [Display(Name = "User Name")]
+    public string UserName { get; set; }
+
+    [Required]
+    [DataType(DataType.Password)]
+    [Display(Name = "Password")]
+    public string Password { get; set; }
+
+    [Display(Name = "Remember me?")]
+    public bool RememberMe { get; set; }
+}
+
+Changing the RegisterViewModel
+
+We also need to change the register view model, here we don’t delete anything, but we need to add a new property called UserName, the outcome should be like this:
+Hide   Copy Code
+
+public class RegisterViewModel
+{
+    [Required]
+    [EmailAddress]
+    [Display(Name = "Email")]
+    public string Email { get; set; }
+
+    [Required]
+    [Display(Name = "User Name")]
+    public string UserName { get; set; }
+
+    [Required]
+    [StringLength(100, ErrorMessage =
+     "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+    [DataType(DataType.Password)]
+    [Display(Name = "Password")]
+    public string Password { get; set; }
+
+    [DataType(DataType.Password)]
+    [Display(Name = "Confirm password")]
+    [Compare("Password", ErrorMessage =
+     "The password and confirmation password do not match.")]
+    public string ConfirmPassword { get; set; }
+}
+
+Changing the Login Action
+
+We only need to change one line here, the line that passes the email to PasswordSignInAsync, we need to change the email to UserName, like so:
+Hide   Copy Code
+
+var result = await SignInManager.PasswordSignInAsync(
+             model.UserName, model.Password, model.RememberMe, shouldLockout: false);
+
+Changing the Register Action
+
+Here, we need to change the line that creates a new ApplicationUser and pass the UserName for UserName in constructor instead of Email, like so:
+Hide   Copy Code
+
+var user = new ApplicationUser { UserName = model.UserName, Email = model.Email };
+
+Changing the ForgotPassword Action
+
+We also need to change the forgot password action, note that for ForgotPassword action we still use the Email and we don't need to change anything except the action method, the same thing applies for ResetPassword, so we change the FindByNameAsync to FindByEmailAsync:
+Hide   Copy Code
+
+var user = await UserManager.FindByEmailAsync(model.Email);
+
+Changing the ResetPassword Action
+
+The last action we need to change is ResetPassword Action, like this:
+Hide   Copy Code
+
+var user = await UserManager.FindByEmailAsync(model.Email);
+
+There are also other methods like ExternalLoginConfirmation that use the email for username that we can change, but since we don’t use it here, we leave it alone.
+Changing the Register and Login Views
+
+All we need to do now is to change the email in the LabelFor and TextBoxFor in these views, note that we need to add a new textbox in Register view, to take the UserName from the user in addition to Email, also ForgotPassword and ResetPassword views already take email, so the only thing we need to change is the actions to use the FindByEmailAsync instead of FindByNameAsync:
+Hide   Copy Code
+
+@Html.LabelFor(m => m.UserName, new { @class = "col-md-2 control-label" })
+@Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+
+@Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+@Html.TextBoxFor(m => m.Email, new { @class = "form-control" })

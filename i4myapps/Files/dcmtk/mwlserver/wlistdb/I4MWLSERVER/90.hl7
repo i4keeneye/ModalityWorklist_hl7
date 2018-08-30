@@ -1,0 +1,6 @@
+MSH|^~\&|MPA|SYSTEMA|IMPAX|MDRADAMB|20080221557||ORM^O01|MSG242081|P|2.3|
+PID|||IST005^^^mpa||cpat5, firstname^||20001106|F|||||||||||oIST005||||||||Arb.|
+PV1|1|O|||||3^Jack^Johnson|162^/CAN_IMM^||||||||||EN01156|||||||||||||||||||||||||20050701174500||||||||
+ORC|NW| 1552234d43.1|||||^^^20180817092033.2423^^3||20080220233838|MDIM-4A|ab^ab|A225021^Dietl^Christoph^^^OA Dr.|MDIM-4A_MDIM|
+OBR||1552234557.1||ROE_CP^Cor pulmo^mpa^ROE_CP^CP^mpa||||||||||||a^a^a^^^a|||15234647.1|IST005.1||||DX|||^^^^2023480234^3|
+ZDS|1.2.826.0.1.3680043.9.7308.20180817.212033.792.1.90^100^Application^DICOM|ScheduledAET|ScheduledStatName
